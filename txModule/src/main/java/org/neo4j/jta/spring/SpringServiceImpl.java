@@ -50,12 +50,6 @@ public class SpringServiceImpl extends AbstractTransactionManager
     {
     }
 
-    @Override
-    public void init( XaDataSourceManager xaDsManager )
-    {
-        delegate = jtaTransactionManager.getTransactionManager();
-    }
-
     public void begin() throws NotSupportedException, SystemException
     {
         delegate.begin();
@@ -106,8 +100,23 @@ public class SpringServiceImpl extends AbstractTransactionManager
     }
 
     @Override
+    public void init() throws Throwable {
+        delegate = jtaTransactionManager.getTransactionManager();
+    }
+
+    @Override
+    public void start() throws Throwable {
+
+    }
+
+    @Override
     public void stop()
     {
         // Currently a no-op
+    }
+
+    @Override
+    public void shutdown() throws Throwable {
+
     }
 }

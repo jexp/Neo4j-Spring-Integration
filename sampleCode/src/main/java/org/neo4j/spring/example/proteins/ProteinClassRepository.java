@@ -10,8 +10,8 @@ import javax.sql.XADataSource;
 import javax.transaction.Transaction;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.graph.neo4j.finder.FinderFactory;
-import org.springframework.data.graph.neo4j.finder.NodeFinder;
+import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
@@ -19,7 +19,7 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 public class ProteinClassRepository
 {
     @Autowired
-    private FinderFactory finderFactory;
+    private Neo4jTemplate finderFactory;
 
     @Autowired
     private XADataSource dataSource;
@@ -42,13 +42,13 @@ public class ProteinClassRepository
                     "insert into Node values(?)" );
             ProteinClass root1 = new ProteinClass( "root1" );
             proteinClasses.add( root1 );
-            insertStmt.setLong( 1, root1.getUnderlyingState().getId() );
+            insertStmt.setLong( 1, root1.getPersistentState().getId() );
             insertStmt.execute();
 
             ProteinClass root2 = new ProteinClass( "root2" );
             proteinClasses.add( root2 );
 
-            insertStmt.setLong( 1, root2.getUnderlyingState().getId() );
+            insertStmt.setLong( 1, root2.getPersistentState().getId() );
             insertStmt.execute();
 
             ProteinClass firstLevel1 = new ProteinClass( "firstLevel1" );
@@ -100,12 +100,12 @@ public class ProteinClassRepository
 
     public ProteinClass findProteinClassIdentifiedBy( long id )
     {
-        return finder().findById( id );
+        return finder().findOne( id );
     }
 
-    private NodeFinder<ProteinClass> finder()
+    private GraphRepository<ProteinClass> finder()
     {
-        return finderFactory.createNodeEntityFinder( ProteinClass.class );
+        return finderFactory.repositoryFor(ProteinClass.class);
     }
 
     public Iterable<ProteinClass> findAllProteinClasses()
@@ -120,6 +120,6 @@ public class ProteinClassRepository
 
     public ProteinClass findProteinClassNamed( String name )
     {
-        return finder().findByPropertyValue( null, "name", name );
+        return finder().findByPropertyValue("name", name );
     }
 }

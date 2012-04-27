@@ -1,10 +1,9 @@
 package org.neo4j.spring.example.proteins;
 
-import org.apache.commons.collections.EnumerationUtils;
-import org.springframework.data.annotation.Indexed;
-import org.springframework.data.graph.annotation.NodeEntity;
-import org.springframework.data.graph.annotation.RelatedTo;
-import org.springframework.data.graph.core.Direction;
+import org.neo4j.graphdb.Direction;
+import org.springframework.data.neo4j.annotation.Indexed;
+import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
 
 @NodeEntity
 public class Protein

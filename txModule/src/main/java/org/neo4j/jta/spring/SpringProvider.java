@@ -22,10 +22,11 @@ package org.neo4j.jta.spring;
 
 import org.neo4j.helpers.Service;
 import org.neo4j.kernel.impl.core.KernelPanicEventGenerator;
+import org.neo4j.kernel.impl.nioneo.store.FileSystemAbstraction;
 import org.neo4j.kernel.impl.transaction.AbstractTransactionManager;
 import org.neo4j.kernel.impl.transaction.TransactionManagerProvider;
-import org.neo4j.kernel.impl.transaction.TxFinishHook;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.neo4j.kernel.impl.transaction.TxHook;
+import org.neo4j.kernel.impl.util.StringLogger;
 
 @Service.Implementation( TransactionManagerProvider.class )
 public class SpringProvider extends TransactionManagerProvider
@@ -34,11 +35,8 @@ public class SpringProvider extends TransactionManagerProvider
     {
         super( "spring-jta" );
     }
-
     @Override
-    protected AbstractTransactionManager loadTransactionManager( String txLogDir,
-            KernelPanicEventGenerator kpe, TxFinishHook rollbackHook )
-    {
+    public AbstractTransactionManager loadTransactionManager(String txLogDir, KernelPanicEventGenerator kpe, TxHook rollbackHook, StringLogger msgLog, FileSystemAbstraction fileSystem) {
         return new SpringServiceImpl();
     }
 }
