@@ -69,6 +69,17 @@ public abstract class BaseTMIntegrationTest {
 		gds.shutdown();
 	}
 
+    @Test
+    // @Ignore("FAILS with Node not found!")
+    public void testCreateNode() throws Exception {
+        final org.neo4j.graphdb.Transaction tx = gds.beginTx();
+        final Node node = gds.createNode();
+        gds.index().forNodes("Foo").add(node, "foo", "bar");
+        node.setProperty("foo","bar");
+        tx.success();
+        tx.finish();
+    }
+
 	/**
 	 * Tests just the graph database with some indexing on top.
 	 * Writes a node into the database, indexes it, commits and
